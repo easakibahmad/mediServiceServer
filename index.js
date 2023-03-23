@@ -22,12 +22,20 @@ async function run() {
     const serviceCollection = client
       .db("mediService")
       .collection("doctorsServices");
+    const bookingsCollection = client.db("mediService").collection("bookings");
 
     // services get
     app.get("/doctorsServices", async (req, res) => {
       const query = {};
       const options = await serviceCollection.find(query).toArray();
       res.send(options);
+
+      // booking post in database
+      app.post("/bookings", async (req, res) => {
+        const booking = req.body;
+        const result = await bookingsCollection.insertOne(booking);
+        res.send(result);
+      });
     });
   } finally {
   }
