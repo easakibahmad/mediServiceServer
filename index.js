@@ -23,6 +23,15 @@ async function run() {
       .db("mediService")
       .collection("doctorsServices");
     const bookingsCollection = client.db("mediService").collection("bookings");
+    const doctorsCollection = client
+      .db("mediService")
+      .collection("doctorsDetails");
+
+    app.get("/doctorsDetails", async (req, res) => {
+      const query = {};
+      const doctors = await doctorsCollection.find(query).toArray();
+      res.send(doctors);
+    });
 
     // services get
     app.get("/doctorsServices", async (req, res) => {
