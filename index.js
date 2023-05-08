@@ -1,6 +1,6 @@
 const express = require("express");
 const cors = require("cors");
-const { MongoClient, ServerApiVersion } = require("mongodb");
+const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 require("dotenv").config();
 const port = process.env.PORT || 5000;
 
@@ -23,6 +23,12 @@ async function run() {
       .db("mediService")
       .collection("doctorsServices");
     const bookingsCollection = client.db("mediService").collection("bookings");
+    const newsCollection = client
+      .db("mediService")
+      .collection("newsCollection");
+    const infoCollection = client
+      .db("mediService")
+      .collection("infoCollection");
     const doctorsCollection = client
       .db("mediService")
       .collection("doctorsDetails");
@@ -31,6 +37,37 @@ async function run() {
       const query = {};
       const doctors = await doctorsCollection.find(query).toArray();
       res.send(doctors);
+    });
+    app.get("/news", async (req, res) => {
+      const query = {};
+      const news = await newsCollection.find(query).toArray();
+      res.send(news);
+    });
+    app.get("/news/:id", async (req, res) => {
+      const id = req.params.id;
+      const objectOne = new ObjectId(id);
+      const query = { _id: objectOne };
+      const cursor = newsCollection.find(query);
+
+      const oneFile = await cursor.toArray();
+
+      res.send(oneFile);
+    });
+
+    app.get("/info", async (req, res) => {
+      const query = {};
+      const info = await infoCollection.find(query).toArray();
+      res.send(info);
+    });
+    app.get("/info/:id", async (req, res) => {
+      const id = req.params.id;
+      const objectOne = new ObjectId(id);
+      const query = { _id: objectOne };
+      const cursor = infoCollection.find(query);
+
+      const oneFile = await cursor.toArray();
+
+      res.send(oneFile);
     });
 
     // services get
